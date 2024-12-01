@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StorySubmission</string>
+    <string name="welcome">Selamat Datang</string>
+    <string name="back">Kembali!</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="login">Masuk</string>
+    <string name="or">Atau</string>
+    <string name="register">Daftar</string>
+    <string name="prolog">Bagikan ceritamu sekarang juga!</string>
+    <string name="hi">Halo</string>
+    <string name="username">username</string>
+    <string name="prolog_data">Lengkapi data diri di bawah ini</string>
+    <string name="login_success">Login Berhasil</string>
+    <string name="title">Judul</string>
+    <string name="desc">Deskripsi</string>
+    <string name="camera">Kamera</string>
+    <string name="Gallery">Galeri</string>
+    <string name="upload">Unggah</string>
+    <string name="description">Deskripsi</string>
+    <string name="created">Dibuat</string>
+    <string name="minimal_password">Password minimal 8 karakter</string>
+</resources>

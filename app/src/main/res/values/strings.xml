@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">StorySubmission</string>
+    <string name="welcome">Welcome</string>
+    <string name="back">Back!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="or">Or</string>
+    <string name="register">Register</string>
+    <string name="prolog">Share your story now!</string>
+    <string name="hi">Hello</string>
+    <string name="username">Username</string>
+    <string name="prolog_data">Complete the personal information below</string>
+    <string name="login_success">Login Successful</string>
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="camera">Camera</string>
+    <string name="Gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="description">Description</string>
+    <string name="created">Created</string>
+    <string name="minimal_password">Password must be at least 8 characters</string>
+</resources>
