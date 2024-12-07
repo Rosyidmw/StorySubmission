@@ -3,19 +3,11 @@ package com.rosyid.storysubmission.ui.login
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -45,20 +37,17 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        viewModel.getSession().observe(this) { session ->
+            if (session.isLogin) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
 
         setupAction()
         playAnimation()
-
-        binding.etPassword.addTextChangedListener { text ->
-            val password = text.toString()
-            if (password.length < 8) {
-                binding.etLayoutPassword.error = ""
-                binding.passwordErrorMessage.visibility = View.VISIBLE
-            } else {
-                binding.etLayoutPassword.error = null
-                binding.passwordErrorMessage.visibility = View.GONE
-            }
-        }
     }
 
     private fun setupAction() {
@@ -66,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
 
-            if (password.length >= 8) {
+            if (binding.etEmail.error == null && binding.etPassword.error == null) {
                 viewModel.login(email, password).observe(this) { result ->
                     when (result) {
                         is Result.Error -> {
@@ -127,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
                 or,
                 register
             )
-            startDelay = 100
+            startDelay = 300
         }.start()
     }
 }

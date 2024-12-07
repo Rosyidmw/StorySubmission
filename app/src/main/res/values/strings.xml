@@ -20,4 +20,14 @@
     <string name="description">Description</string>
     <string name="created">Created</string>
     <string name="minimal_password">Password must be at least 8 characters</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="add_story">Add Story</string>
+    <string name="permission">Permission Required</string>
+    <string name="permission_message">The app requires camera permission. Please enable permissions in Settings.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="permission_granted">Permission request granted</string>
+    <string name="permission_denied">Permission request denied</string>
+    <string name="logout">Logout</string>
+    <string name="settings">Settings</string>
 </resources>

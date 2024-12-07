@@ -19,7 +19,6 @@ import com.rosyid.storysubmission.adapter.StoryAdapter
 import com.rosyid.storysubmission.data.remote.Result
 import com.rosyid.storysubmission.databinding.ActivityMainBinding
 import com.rosyid.storysubmission.ui.ViewModelFactory
-import com.rosyid.storysubmission.ui.detail.DetailActivity
 import com.rosyid.storysubmission.ui.login.LoginActivity
 import com.rosyid.storysubmission.ui.story.AddStoryActivity
 

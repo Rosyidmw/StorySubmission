@@ -21,4 +21,14 @@
     <string name="description">Deskripsi</string>
     <string name="created">Dibuat</string>
     <string name="minimal_password">Password minimal 8 karakter</string>
+    <string name="invalid_email">Format email tidak valid</string>
+    <string name="add_story">Tambah Story</string>
+    <string name="permission">Izin Diperlukan</string>
+    <string name="permission_message">Aplikasi membutuhkan izin kamera untuk berfungsi. Harap aktifkan izin di Pengaturan.</string>
+    <string name="open_settings">Buka Pengaturan</string>
+    <string name="cancel">Batal</string>
+    <string name="permission_granted">Permintaan izin diberikan</string>
+    <string name="permission_denied">Permintaan izin ditolak</string>
+    <string name="logout">Logout</string>
+    <string name="settings">Settings</string>
 </resources>

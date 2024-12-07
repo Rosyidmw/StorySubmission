@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import com.rosyid.storysubmission.R
 import com.rosyid.storysubmission.data.remote.Result
-import com.rosyid.storysubmission.databinding.ActivityLoginBinding
 import com.rosyid.storysubmission.databinding.ActivityRegisterBinding
 import com.rosyid.storysubmission.ui.ViewModelFactory
 
@@ -55,7 +54,7 @@ class RegisterActivity : AppCompatActivity() {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
 
-            if (password.length >= 8) {
+            if (binding.etEmail.error == null && binding.etPassword.error == null) {
                 viewModel.register(name, email, password).observe(this) {  result ->
                     when(result) {
                         is Result.Error -> {
@@ -100,7 +99,7 @@ class RegisterActivity : AppCompatActivity() {
                 passwordEditTextLayout,
                 login,
             )
-            startDelay = 100
+            startDelay = 300
         }.start()
     }
 }

@@ -80,7 +80,7 @@
         tools:alpha="100"
         app:layout_constraintTop_toBottomOf="@id/tv_back">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.rosyid.storysubmission.ui.custom.CustomEmailEditText
             android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -104,7 +104,7 @@
         app:layout_constraintTop_toBottomOf="@id/et_layout_email"
         app:endIconMode="password_toggle">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.rosyid.storysubmission.ui.custom.CustomPasswordEditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

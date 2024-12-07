@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -40,9 +41,10 @@ class AddStoryActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.permission_granted, Toast.LENGTH_LONG).show()
+                startCamera()
             } else {
-                Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -68,7 +70,7 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         supportActionBar?.show()
-        supportActionBar?.title = "Tambah Story"
+        supportActionBar?.title = getString(R.string.add_story)
 
         viewModel.currentImageUri.observe(this) {
             binding.previewImageView.setImageURI(it)
@@ -96,8 +98,32 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
-        viewModel.setCurrentImageUri(getImageUri(this))
-        launcherIntentCamera.launch(viewModel.currentImageUri.value!!)
+        when {
+            allPermissionsGranted() -> {
+                viewModel.setCurrentImageUri(getImageUri(this))
+                launcherIntentCamera.launch(viewModel.currentImageUri.value!!)
+            }
+            shouldShowRequestPermissionRationale(REQUIRED_PERMISSION) -> {
+                requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+            }
+            else -> {
+                showPermissionDeniedDialog()
+            }
+        }
+    }
+
+    private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.permission)
+            .setMessage(R.string.permission_message)
+            .setPositiveButton(R.string.open_settings) { _, _ ->
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private val launcherIntentCamera = registerForActivityResult(
