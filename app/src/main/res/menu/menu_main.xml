@@ -11,4 +11,9 @@
         android:title="@string/settings"
         android:icon="@drawable/baseline_settings_24"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/maps"
+        android:title="@string/maps"
+        android:icon="@drawable/baseline_map_24"
+        app:showAsAction="always"/>
 </menu>

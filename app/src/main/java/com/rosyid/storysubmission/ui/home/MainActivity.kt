@@ -20,6 +20,7 @@ import com.rosyid.storysubmission.data.remote.Result
 import com.rosyid.storysubmission.databinding.ActivityMainBinding
 import com.rosyid.storysubmission.ui.ViewModelFactory
 import com.rosyid.storysubmission.ui.login.LoginActivity
+import com.rosyid.storysubmission.ui.maps.MapsActivity
 import com.rosyid.storysubmission.ui.story.AddStoryActivity
 
 class MainActivity : AppCompatActivity() {
@@ -58,6 +59,11 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.settings -> {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                true
+            }
+            R.id.maps -> {
+                val intent = Intent(this, MapsActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

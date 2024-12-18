@@ -8,6 +8,7 @@ import com.rosyid.storysubmission.data.remote.UserRepository
 import com.rosyid.storysubmission.di.Injection
 import com.rosyid.storysubmission.ui.home.MainViewModel
 import com.rosyid.storysubmission.ui.login.LoginViewModel
+import com.rosyid.storysubmission.ui.maps.MapsViewModel
 import com.rosyid.storysubmission.ui.register.RegisterViewModel
 
 class ViewModelFactory(private val userRepository: UserRepository, private val storyRepository: StoryRepository) : ViewModelProvider.NewInstanceFactory() {
@@ -22,6 +23,9 @@ class ViewModelFactory(private val userRepository: UserRepository, private val s
             }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(userRepository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(storyRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
