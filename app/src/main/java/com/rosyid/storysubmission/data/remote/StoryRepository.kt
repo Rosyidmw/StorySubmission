@@ -3,7 +3,12 @@ package com.rosyid.storysubmission.data.remote
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.google.gson.Gson
+import com.rosyid.storysubmission.adapter.StoryPagingSource
 import com.rosyid.storysubmission.data.remote.pref.AddStoryResponse
 import com.rosyid.storysubmission.data.remote.pref.ListStoryItem
 import com.rosyid.storysubmission.data.remote.pref.StoryResponse
@@ -38,13 +43,24 @@ class StoryRepository private constructor(private val apiService: ApiService){
         }
     }
 
+    fun getPagedStories() : LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = { StoryPagingSource(apiService) }
+        ).liveData
+    }
+
     suspend fun getListStory(): List<ListStoryItem?> {
         return apiService.getStories().listStory
     }
 
     fun uploadStory(
         imageFile: File,
-        description: String
+        description: String,
+        lat: Double? = null,
+        lon: Double? = null
     ): LiveData<Result<AddStoryResponse>> = liveData {
         emit(Result.Loading)
         val requestBody = description.toRequestBody("text/plain".toMediaType())
@@ -55,7 +71,7 @@ class StoryRepository private constructor(private val apiService: ApiService){
             requestImageFile
         )
         try {
-            val response = apiService.uploadStory(multipartBody, requestBody)
+            val response = apiService.uploadStory(multipartBody, requestBody, lat, lon)
             emit(Result.Success(response))
         } catch (e: HttpException) {
             Log.e("uploadStory", "HTTP Exception: ${e.message}")

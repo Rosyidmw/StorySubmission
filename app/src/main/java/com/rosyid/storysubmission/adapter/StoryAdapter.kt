@@ -3,8 +3,8 @@ package com.rosyid.storysubmission.adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.rosyid.storysubmission.data.remote.pref.ListStoryItem
@@ -12,7 +12,7 @@ import com.rosyid.storysubmission.databinding.ItemCardBinding
 import com.rosyid.storysubmission.ui.detail.DetailActivity
 import com.rosyid.storysubmission.ui.detail.DetailActivity.Companion.STORY_ID
 
-class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class StoryAdapter: PagingDataAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
     class MyViewHolder(private val binding: ItemCardBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             Glide.with(binding.root.context)
@@ -38,7 +38,7 @@ class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_C
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val story = getItem(position)
-        holder.bind(story)
+        holder.bind(story!!)
 
     }
 

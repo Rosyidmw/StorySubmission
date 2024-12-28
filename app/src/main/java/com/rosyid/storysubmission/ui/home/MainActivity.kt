@@ -13,10 +13,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rosyid.storysubmission.R
 import com.rosyid.storysubmission.adapter.StoryAdapter
-import com.rosyid.storysubmission.data.remote.Result
 import com.rosyid.storysubmission.databinding.ActivityMainBinding
 import com.rosyid.storysubmission.ui.ViewModelFactory
 import com.rosyid.storysubmission.ui.login.LoginActivity
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         setupView()
         setupAction()
+        observePagedStories()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,27 +84,20 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
 
-        viewModel.getStory().observe(this) { result ->
-            when(result) {
-                is Result.Error -> {
-                    binding.progress.visibility = View.GONE
-                    Toast.makeText(this, result.error, Toast.LENGTH_SHORT).show()
-                }
+    private fun observePagedStories() {
+        viewModel.getPagedStories().observe(this) { pagingData ->
+            storyAdapter.submitData(lifecycle, pagingData)
+        }
 
-                is Result.Loading -> {
-                    binding.progress.visibility = View.VISIBLE
-                }
-
-                is Result.Success -> {
-                    binding.progress.visibility = View.GONE
-                    if (result.data.error == true) {
-                        Toast.makeText(this, result.data.message, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Log.d("MainActivity", "Data received: ${result.data.listStory}")
-                        storyAdapter.submitList(result.data.listStory)
-                    }
-                }
+        storyAdapter.addLoadStateListener { loadState ->
+            if (loadState.refresh is LoadState.Error) {
+                binding.progress.visibility = View.GONE
+                val error = (loadState.refresh as LoadState.Error).error
+                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+            } else {
+                binding.progress.visibility = if (loadState.refresh is LoadState.Loading) View.VISIBLE else View.GONE
             }
         }
     }

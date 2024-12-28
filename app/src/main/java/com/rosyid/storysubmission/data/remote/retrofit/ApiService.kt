@@ -35,10 +35,14 @@ interface ApiService {
     suspend fun uploadStory(
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
+        @Part("lat") lat: Double?,
+        @Part("lon") lon: Double?
     ): AddStoryResponse
 
     @GET("stories")
     suspend fun getStories(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
     ): StoryResponse
 
     @GET("stories")

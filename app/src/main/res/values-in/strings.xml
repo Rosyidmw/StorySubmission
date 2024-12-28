@@ -31,4 +31,8 @@
     <string name="permission_denied">Permintaan izin ditolak</string>
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
+    <string name="maps">Maps</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="add_location">Tambah Lokasi</string>
+    <string name="location_permission_message">Izin Lokasi Diperlukan</string>
 </resources>

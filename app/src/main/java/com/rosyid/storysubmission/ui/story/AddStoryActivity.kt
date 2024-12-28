@@ -14,10 +14,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.rosyid.storysubmission.R
 import com.rosyid.storysubmission.data.remote.Result
 import com.rosyid.storysubmission.databinding.ActivityAddStoryBinding
@@ -35,6 +38,9 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding : ActivityAddStoryBinding
     private val viewModel by viewModels<MainViewModel> { ViewModelFactory.getInstance(this) }
     private var currentImageUri: Uri? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var latitude: Double? = null
+    private var longitude: Double? = null
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -59,6 +65,7 @@ class AddStoryActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityAddStoryBinding.inflate(layoutInflater )
         setContentView(binding.root)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -79,6 +86,14 @@ class AddStoryActivity : AppCompatActivity() {
         binding.cameraButton.setOnClickListener { startCamera() }
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.uploadButton.setOnClickListener { uploadStory() }
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                requestLocationPermission()
+            } else {
+                latitude = null
+                longitude = null
+            }
+        }
 
     }
 
@@ -93,6 +108,7 @@ class AddStoryActivity : AppCompatActivity() {
             binding.previewImageView.setImageURI(uri)
             viewModel.setCurrentImageUri(uri)
         } else {
+            binding.previewImageView.setImageResource(R.drawable.baseline_image_24)
             Log.d("Photo Picker", "No media selected")
         }
     }
@@ -133,7 +149,8 @@ class AddStoryActivity : AppCompatActivity() {
             binding.previewImageView.setImageURI(viewModel.currentImageUri.value)
             showImage()
         } else {
-            currentImageUri = null
+            viewModel.setCurrentImageUri(null)
+            binding.previewImageView.setImageResource(R.drawable.baseline_image_24)
         }
     }
 
@@ -155,7 +172,7 @@ class AddStoryActivity : AppCompatActivity() {
                 Log.d("Image File", "showImage: ${imageFile.path}")
                 val description = binding.etDesc.text.toString()
 
-                viewModel.uploadStory(imageFile, description).observe(this@AddStoryActivity) { result ->
+                viewModel.uploadStory(imageFile, description, latitude, longitude).observe(this@AddStoryActivity) { result ->
                     when(result) {
                         is Result.Error -> {
                             binding.progressIndicator.visibility = View.GONE
@@ -177,6 +194,65 @@ class AddStoryActivity : AppCompatActivity() {
                         }
 
                     }
+                }
+            }
+        }
+    }
+
+    private fun requestLocationPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                getLastKnownLocation()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                showLocationPermissionRationaleDialog()
+            }
+            else -> {
+                requestPermissionLauncherForLocation.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
+    private val requestPermissionLauncherForLocation =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(this, R.string.permission_granted, Toast.LENGTH_LONG).show()
+                getLastKnownLocation()
+            } else {
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show()
+            }
+        }
+
+    private fun showLocationPermissionRationaleDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.permission)
+            .setMessage(R.string.location_permission_message)
+            .setPositiveButton(R.string.open_settings) { _, _ ->
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun getLastKnownLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    Log.d("AddStoryActivity", "Location fetched: lat=$latitude, lon=$longitude")
+                } else {
+                    Log.d("AddStoryActivity", "Location is null")
                 }
             }
         }
